@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Gap Mapper Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+            width: 100%;
+        }
+        
+        .card h2 {
+            color: #6a11cb;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2 i {
+            margin-right: 10px;
+        }
+        
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .secondary-btn {
+            background: #f1f2f6;
+            color: #444;
+        }
+        
+        .skill-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .skill-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .status-missing {
+            background: #ff4757;
+        }
+        
+        .status-present {
+            background: #2ed573;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1s ease-in-out;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .resource-card-header {
+            background: #6a11cb;
+            color: white;
+            padding: 15px;
+        }
+        
+        .resource-card-body {
+            padding: 15px;
+        }
+        
+        .resource-link {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #2575fc;
+            transition: all 0.3s;
+        }
+        
+        .resource-link:hover {
+            background: #f0f5ff;
+            border-color: #2575fc;
+        }
+        
+        .resource-link i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: #f1f2f6;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #6a11cb;
+            color: white;
+        }
+        
+        .priority-badge {
+            background: #ff9f43;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .progress-tracker {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .progress-tracker input {
+            width: auto;
+            margin-right: 5px;
+        }
+        
+        .completion-badge {
+            display: inline-block;
+            background: #2ed573;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .visual-roadmap {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 0;
+            gap: 20px;
+        }
+        
+        .roadmap-stage {
+            min-width: 250px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .roadmap-stage h4 {
+            color: #6a11cb;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .roadmap-skill {
+            padding: 10px;
+            background: #f8f9ff;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .next-steps {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef4ff;
+            border-radius: 10px;
+        }
+        
+        .motivation-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .motivation-section h3 {
+            margin-bottom: 10px;
+        }
+        
+        .query-section {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .recommendation-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #eef4ff;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .career-option {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .career-option:hover {
+            background: #eef4ff;
+            transform: translateY(-3px);
+        }
+        
+        .career-option.selected {
+            background: #6a11cb;
+            color: white;
+        }
+        
+        .career-option i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            header p {
+                font-size: 1rem;
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-section {
+                flex-direction: column;
+            }
+            
+            .visual-roadmap {
+                flex-direction: column;
+            }
+            
+            .roadmap-stage {
+                min-width: 100%;
+            }
+            
+            .career-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Skill Gap Mapper Pro</h1>
+            <p>Identify the skills you need for your dream career and get a personalized learning path</p>
+        </header>
+        
+        <div class="motivation-section">
+            <h3><i class="fas fa-quote-left"></i> Your Journey to Mastery Starts Here <i class="fas fa-quote-right"></i></h3>
+            <p>Every expert was once a beginner. Your dedication to learning new skills is the first step toward success!</p>
+        </div>
+        
+        <div class="app-container">
+            <!-- User Input Section -->
+            <div class="card">
+                <h2><i class="fas fa-user-graduate"></i> Your Skills & Career Goals</h2>
+                <div class="input-section">
+                    <div class="form-group">
+                        <label for="skills">Your Current Skills (comma separated)</label>
+                        <input type="text" id="skills" placeholder="e.g., JavaScript, Python, Project Management">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Your Career Goal</label>
+                        <div class="career-grid">
+                            <div class="career-option" data-value="frontend">
+                                <i class="fas fa-code"></i>
+                                <span>Frontend Developer</span>
+                            </div>
+                            <div class="career-option" data-value="backend">
+                                <i class="fas fa-server"></i>
+                                <span>Backend Developer</span>
+                            </div>
+                            <div class="career-option" data-value="fullstack">
+                                <i class="fas fa-laptop-code"></i>
+                                <span>Full Stack Developer</span>
+                            </div>
+                            <div class="career-option" data-value="data-scientist">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Data Scientist</span>
+                            </div>
+                            <div class="career-option" data-value="ux-designer">
+                                <i class="fas fa-paint-brush"></i>
+                                <span>UX Designer</span>
+                            </div>
+                            <div class="career-option" data-value="devops">
+                                <i class="fas fa-cloud"></i>
+                                <span>DevOps Engineer</span>
+                            </div>
+                            <div class="career-option" data-value="product-manager">
+                                <i class="fas fa-tasks"></i>
+                                <span>Product Manager</span>
+                            </div>
+                            <div class="career-option" data-value="mobile-developer">
+                                <i class="fas fa-mobile-alt"></i>
+                                <span>Mobile Developer</span>
+                            </div>
+                            <div class="career-option" data-value="ai-engineer">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Engineer</span>
+                            </div>
+                            <div class="career-option" data-value="cybersecurity">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Cybersecurity</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="career-goal">
+                    </div>
+                    
+                    <button id="analyze-btn">Analyze Skill Gap</button>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress" id="progress-bar"></div>
+                </div>
+            </div>
+            
+            <!-- Gap Analysis Section -->
+            <div class="card">
+                <h2><i class="fas fa-chart-pie"></i> Gap Analysis</h2>
+                <div id="analysis-result">
+                    <p>Enter your skills and select a career goal to see the analysis</p>
+                </div>
+            </div>
+            
+            <!-- Roadmap Section -->
+            <div class="card">
+                <h2><i class="fas fa-road"></i> Learning Roadmap</h2>
+                <div id="roadmap">
+                    <p>Your personalized learning roadmap will appear here</p>
+                </div>
+                
+                <div id="visual-roadmap-container" style="display: none;">
+                    <h3>Visual Learning Path</h3>
+                    <div class="visual-roadmap" id="visual-roadmap">
+                        <!-- Visual roadmap will be generated here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resources Section -->
+            <div class="card">
+                <h2><i class="fas fa-book"></i> Learning Resources</h2>
+                
+                <div class="filter-section" id="resource-filters" style="display: none;">
+                    <button class="filter-btn active" data-type="all">All Resources</button>
+                    <button class="filter-btn" data-type="youtube">Videos</button>
+                    <button class="filter-btn" data-type="course">Courses</button>
+                    <button class="filter-btn" data-type="article">Articles/Blogs</button>
+                    <button class="filter-btn" data-type="documentation">Documentation</button>
+                </div>
+                
+                <div id="resources">
+                    <p>Recommended resources will appear here</p>
+                </div>
+                
+                <!-- Query Section -->
+                <div class="query-section">
+                    <h3><i class="fas fa-question-circle"></i> Need Specific Help?</h3>
+                    <p>Describe your learning challenge or what you're struggling with:</p>
+                    <textarea id="user-query" rows="3" placeholder="e.g., I'm having trouble understanding React hooks..."></textarea>
+                    <button id="recommend-btn">Get Personalized Recommendations</button>
+                    
+                    <div class="recommendation-result" id="recommendation-result">
+                        <h4>Recommended Resources:</h4>
+                        <div id="recommendation-content"></div>
+                    </div>
+                </div>
+                
+                <div id="next-steps-container" style="display: none;">
+                    <div class="next-steps">
+                        <h3><i class="fas fa-lightbulb"></i> Next Steps</h3>
+                        <p id="next-steps-text">Based on your progress, we recommend focusing on these areas next.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="motivation-section">
+            <h3><i class="fas fa-quote-left"></i> Progress Over Perfection <i class="fas fa-quote-right"></i></h3>
+            <p>Remember: skills are built one step at a time. Celebrate each small victory along your learning journey!</p>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Code
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const progressBar = document.getElementById('progress-bar');
+            const resourceFilters = document.getElementById('resource-filters');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const recommendBtn = document.getElementById('recommend-btn');
+            const recommendationResult = document.getElementById('recommendation-result');
+            const careerOptions = document.querySelectorAll('.career-option');
+            
+            // Load user progress from localStorage
+            let userProgress = JSON.parse(localStorage.getItem('skillProgress')) || {};
+            
+            // Career options selection
+            careerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    careerOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('career-goal').value = this.dataset.value;
+                });
+            });
+            
+            // Sample data for required skills for each career
+            const careerSkills = {
+                'frontend': ['HTML', 'CSS', 'JavaScript', 'React', 'Responsive Design', 'Git', 'Web Performance', 'Accessibility'],
+                'backend': ['Python', 'Java', 'Node.js', 'Databases', 'API Design', 'Authentication', 'System Design', 'Caching'],
+                'fullstack': ['HTML', 'CSS', 'JavaScript', 'React', 'Node.js', 'Databases', 'Git', 'API Design', 'DevOps Basics'],
+                'data-scientist': ['Python', 'R', 'Statistics', 'Machine Learning', 'Data Visualization', 'SQL', 'Data Cleaning', 'Big Data'],
+                'ux-designer': ['UI Design', 'UX Research', 'Wireframing', 'Prototyping', 'Figma', 'User Testing', 'Interaction Design', 'Design Systems'],
+                'devops': ['Linux', 'Docker', 'Kubernetes', 'AWS', 'CI/CD', 'Monitoring', 'Infrastructure as Code', 'Networking'],
+                'product-manager': ['Product Strategy', 'Market Research', 'Agile', 'User Stories', 'Data Analysis', 'Project Management', 'Stakeholder Management', 'Prioritization'],
+                'mobile-developer': ['Swift/Kotlin', 'React Native/Flutter', 'Mobile UI Design', 'API Integration', 'App Store Deployment', 'Performance Optimization'],
+                'ai-engineer': ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow/PyTorch', 'Natural Language Processing', 'Computer Vision'],
+                'cybersecurity': ['Network Security', 'Ethical Hacking', 'Cryptography', 'Security Auditing', 'Incident Response', 'Security Protocols']
+            };
+            
+            // Learning outcomes for each skill
+            const learningOutcomes = {
+                'HTML': 'Build semantic web pages with proper structure and accessibility',
+                'CSS': 'Create responsive and visually appealing layouts with modern CSS',
+                'JavaScript': 'Develop interactive web applications with core JS concepts',
+                'React': 'Build component-based UIs with state management and hooks',
+                'Python': 'Write efficient scripts and applications using Python fundamentals',
+                'Node.js': 'Develop server-side applications with JavaScript runtime environment',
+                'Databases': 'Design and query databases using SQL and NoSQL technologies',
+                'Git': 'Manage code versions and collaborate using Git workflows',
+                'UI Design': 'Create intuitive and aesthetically pleasing user interfaces',
+                'Machine Learning': 'Implement algorithms to extract insights from data',
+                'Web Performance': 'Optimize websites for fast loading and smooth interactions',
+                'Accessibility': 'Create websites usable by people with diverse abilities',
+                'API Design': 'Design robust and developer-friendly APIs',
+                'System Design': 'Architect scalable and maintainable software systems',
+                'DevOps Basics': 'Understand CI/CD pipelines and infrastructure management',
+                'Data Visualization': 'Present data insights through effective visualizations',
+                'UX Research': 'Conduct user research to inform design decisions',
+                'Docker': 'Containerize applications for consistent deployment',
+                'Kubernetes': 'Orchestrate containers at scale',
+                'AWS': 'Deploy and manage applications on cloud infrastructure',
+                'Agile': 'Work effectively in iterative development environments',
+                'Swift/Kotlin': 'Develop native mobile applications for iOS/Android',
+                'TensorFlow/PyTorch': 'Build and train neural network models',
+                'Network Security': 'Protect networks from threats and vulnerabilities'
+            };
+            
+            // Enhanced learning resources with actual links
+            const learningResources = {
+                'HTML': [
+                    { name: 'HTML Crash Course - Traversy Media', link: 'https://www.youtube.com/watch?v=UB1O30fR-EE', type: 'youtube', priority: 'high' },
+                    { name: 'HTML Tutorial - freeCodeCamp', link: 'https://www.youtube.com/watch?v=pQN-pnXPaVg', type: 'youtube', priority: 'high' },
+                    { name: 'MDN Web Docs - HTML', link: 'https://developer.mozilla.org/en-US/docs/Web/HTML', type: 'documentation', priority: 'medium' },
+                    { name: 'W3Schools HTML Tutorial', link: 'https://www.w3schools.com/html/', type: 'article', priority: 'medium' }
+                ],
+                'CSS': [
+                    { name: 'CSS Full Course - freeCodeCamp', link: 'https://www.youtube.com/watch?v=1Rs2ND1ryYc', type: 'youtube', priority: 'high' },
+                    { name: 'CSS Tutorial - Web Dev Simplified', link: 'https://www.youtube.com/watch?v=1PnVor36_40', type: 'youtube', priority: 'medium' },
+                    { name: 'CSS Tricks', link: 'https://css-tricks.com/', type: 'article', priority: 'medium' },
+                    { name: 'MDN Web Docs - CSS', link: 'https://developer.mozilla.org/en-US/docs/Web/CSS', type: 'documentation', priority: 'high' }
+                ],
+                'JavaScript': [
+                    { name: 'JavaScript Tutorial for Beginners - freeCodeCamp', link: 'https://www.youtube.com/watch?v=PkZNo7MFNFg', type: 'youtube', priority: 'high' },
+                    { name: 'Modern JavaScript Tutorial', link: 'https://javascript.info/', type: 'article', priority: 'high' },
+                    { name: 'MDN JavaScript Guide', link: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide', type: 'documentation', priority: 'medium' },
+                    { name: 'JavaScript30 Challenge', link: 'https://javascript30.com/', type: 'course', priority: 'high' }
+                ],
+                'React': [
+                    { name: 'React Course - Beginner\'s Tutorial', link: 'https://www.youtube.com/watch?v=bMknfKXIFA8', type: 'youtube', priority: 'high' },
+                    { name: 'React Official Tutorial', link: 'https://reactjs.org/tutorial/tutorial.html', type: 'documentation', priority: 'high' },
+                    { name: 'Full React Course - freeCodeCamp', link: 'https://www.youtube.com/watch?v=4UZrsTqkcW4', type: 'youtube', priority: 'medium' },
+                    { name: 'React Documentation', link: 'https://reactjs.org/docs/getting-started.html', type: 'documentation', priority: 'medium' }
+                ],
+                'Python': [
+                    { name: 'Python for Beginners - freeCodeCamp', link: 'https://www.youtube.com/watch?v=eWRfhZUzrAc', type: 'youtube', priority: 'high' },
+                    { name: 'Python Tutorial - Corey Schafer', link: 'https://www.youtube.com/playlist?list=PL-osiE80TeTt2d9bfVyTiXJA-UTHn6WwU', type: 'youtube', priority: 'high' },
+                    { name: 'Real Python Tutorials', link: 'https://realpython.com/', type: 'article', priority: 'medium' },
+                    { name: 'Official Python Documentation', link: 'https://docs.python.org/3/', type: 'documentation', priority: 'medium' }
+                ],
+                'Node.js': [
+                    { name: 'Node.js Tutorial for Beginners - Programming with Mosh', link: 'https://www.youtube.com/watch?v=TlB_eWDSMt4', type: 'youtube', priority: 'high' },
+                    { name: 'Node.js Full Course - freeCodeCamp', link: 'https://www.youtube.com/watch?v=Oe421EPjeBE', type: 'youtube', priority: 'high' },
+                    { name: 'The Net Ninja Node.js Tutorial', link: 'https://www.youtube.com/playlist?list=PL4cUxeGkcC9gcy9lrvMJ75z9maRw4byYp', type: 'youtube', priority: 'medium' },
+                    { name: 'Node.js Official Docs', link: 'https://nodejs.org/en/docs/', type: 'documentation', priority: 'medium' }
+                ],
+                'Databases': [
+                    { name: 'SQL Tutorial - freeCodeCamp', link: 'https://www.youtube.com/watch?v=HXV3zeQKqGY', type: 'youtube', priority: 'high' },
+                    { name: 'MySQL Tutorial for Beginners', link: 'https://www.youtube.com/watch?v=7S_tz1z_5bA', type: 'youtube', priority: 'medium' },
+                    { name: 'MongoDB Tutorial - The Net Ninja', link: 'https://www.youtube.com/playlist?list=PL4cUxeGkcC9h77dJ-QJlwGlZlTd4ecZOA', type: 'youtube', priority: 'medium' },
+                    { name: 'SQLZoo Interactive Tutorial', link: 'https://sqlzoo.net/', type: 'article', priority: 'high' }
+                ],
+                'Git': [
+                    { name: 'Git and GitHub for Beginners - freeCodeCamp', link: 'https://www.youtube.com/watch?v=RGOj5yH7evk', type: 'youtube', priority: 'high' },
+                    { name: 'Git Tutorial for Beginners - The Net Ninja', link: 'https://www.youtube.com/playlist?list=PL4cUxeGkcC9goXbgTDQ0n_4TBzOO0ocPR', type: 'youtube', priority: 'medium' },
+                    { name: 'Atlassian Git Tutorial', link: 'https://www.atlassian.com/git/tutorials', type: 'article', priority: 'medium' },
+                    { name: 'Pro Git Book', link: 'https://git-scm.com/book/en/v2', type: 'documentation', priority: 'high' }
+                ],
+                'UI Design': [
+                    { name: 'UI Design Tutorial - AJ&Smart', link: 'https://www.youtube.com/watch?v=5w9k9UvQqE0', type: 'youtube', priority: 'high' },
+                    { name: 'UI Design Principles', link: 'https://www.youtube.com/watch?v=ZK86XQ1iFVs', type: 'youtube', priority: 'medium' },
+                    { name: 'Figma UI Design Tutorial', link: 'https://www.youtube.com/watch?v=FTFaQWZBqQ8', type: 'youtube', priority: 'high' },
+                    { name: 'UI Design Patterns', link: 'https://ui-patterns.com/', type: 'article', priority: 'medium' }
+                ],
+                'Machine Learning': [
+                    { name: 'Machine Learning Course - freeCodeCamp', link: 'https://www.youtube.com/watch?v=NWONeJKn6kc', type: 'youtube', priority: 'high' },
+                    { name: 'Machine Learning for Beginners - Google', link: 'https://developers.google.com/machine-learning/crash-course', type: 'course', priority: 'high' },
+                    { name: 'Intro to Machine Learning - Kaggle', link: 'https://www.kaggle.com/learn/intro-to-machine-learning', type: 'course', priority: 'medium' },
+                    { name: 'Machine Learning Tutorial - Simplilearn', link: 'https://www.youtube.com/watch?v=ukzFI9rgwfU', type: 'youtube', priority: 'medium' }
+                ]
+            };
+            
+            // Problem-specific recommendations
+            const problemRecommendations = {
+                'react': ['React', 'JavaScript'],
+                'javascript': ['JavaScript'],
+                'python': ['Python'],
+                'css': ['CSS'],
+                'html': ['HTML'],
+                'database': ['Databases'],
+                'git': ['Git'],
+                'hook': ['React'],
+                'state': ['React', 'JavaScript'],
+                'api': ['Node.js', 'API Design'],
+                'responsive': ['CSS', 'Responsive Design'],
+                'layout': ['CSS', 'UI Design'],
+                'design': ['UI Design', 'UX Research'],
+                'component': ['React'],
+                'async': ['JavaScript', 'Node.js'],
+                'promise': ['JavaScript'],
+                'flexbox': ['CSS'],
+                'grid': ['CSS'],
+                'node': ['Node.js'],
+                'authentication': ['Authentication', 'Node.js']
+            };
+            
+            analyzeBtn.addEventListener('click', function() {
+                const userSkills = document.getElementById('skills').value.split(',').map(skill => skill.trim());
+                const careerGoal = document.getElementById('career-goal').value;
+                
+                if (userSkills.length === 0 || careerGoal === '') {
+                    alert('Please enter your skills and select a career goal');
+                    return;
+                }
+                
+                // Animate progress bar
+                let width = 0;
+                const interval = setInterval(() => {
+                    if (width >= 100) {
+                        clearInterval(interval);
+                        performAnalysis(userSkills, careerGoal);
+                    } else {
+                        width++;
+                        progressBar.style.width = width + '%';
+                    }
+                }, 20);
+            });
+            
+            recommendBtn.addEventListener('click', function() {
+                const userQuery = document.getElementById('user-query').value.toLowerCase();
+                
+                if (!userQuery) {
+                    alert('Please describe your learning challenge');
+                    return;
+                }
+                
+                // Find relevant skills based on query
+                const relevantSkills = [];
+                for (const [keyword, skills] of Object.entries(problemRecommendations)) {
+                    if (userQuery.includes(keyword)) {
+                        skills.forEach(skill => {
+                            if (!relevantSkills.includes(skill)) {
+                                relevantSkills.push(skill);
+                            }
+                        });
+                    }
+                }
+                
+                // If no specific keywords found, recommend general resources
+                if (relevantSkills.length === 0) {
+                    displayRecommendations(['JavaScript', 'HTML', 'CSS']);
+                } else {
+                    displayRecommendations(relevantSkills);
+                }
+                
+                recommendationResult.style.display = 'block';
+            });
+            
+            // Add event listeners for resource filtering
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterResources(this.dataset.type);
+                });
+            });
+            
+            function performAnalysis(userSkills, careerGoal) {
+                const requiredSkills = careerSkills[careerGoal] || [];
+                
+                // Find missing skills
+                const missingSkills = requiredSkills.filter(skill => 
+                    !userSkills.some(userSkill => 
+                        userSkill.toLowerCase().includes(skill.toLowerCase()) || 
+                        skill.toLowerCase().includes(userSkill.toLowerCase())
+                    )
+                );
+                
+                // Calculate match percentage
+                const matchPercentage = Math.round(((requiredSkills.length - missingSkills.length) / requiredSkills.length) * 100);
+                
+                // Display analysis results
+                displayAnalysisResult(requiredSkills, userSkills, matchPercentage);
+                
+                // Display roadmap
+                displayRoadmap(missingSkills);
+                
+                // Display visual roadmap
+                displayVisualRoadmap(missingSkills);
+                
+                // Display resources
+                displayResources(missingSkills);
+                
+                // Show resource filters
+                resourceFilters.style.display = 'flex';
+                
+                // Show next steps
+                document.getElementById('next-steps-container').style.display = 'block';
+                
+                // Update next steps
+                updateNextSteps();
+            }
+            
+            function displayAnalysisResult(requiredSkills, userSkills, matchPercentage) {
+                const analysisElement = document.getElementById('analysis-result');
+                analysisElement.innerHTML = `
+                    <h3>Skill Match: ${matchPercentage}%</h3>
+                    <p>You have ${requiredSkills.length - (requiredSkills.length - matchPercentage)} out of ${requiredSkills.length} required skills</p>
+                    <div class="skills-list">
+                        ${requiredSkills.map(skill => `
+                            <div class="skill-item">
+                                <span>${skill}</span>
+                                <div class="skill-status ${userSkills.some(userSkill => 
+                                    userSkill.toLowerCase().includes(skill.toLowerCase()) || 
+                                    skill.toLowerCase().includes(userSkill.toLowerCase())
+                                ) ? 'status-present' : 'status-missing'}"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            function displayRoadmap(missingSkills) {
+                const roadmapElement = document.getElementById('roadmap');
+                
+                if (missingSkills.length === 0) {
+                    roadmapElement.innerHTML = `<p>Congratulations! You have all the required skills for your career goal.</p>`;
+                    return;
+                }
+                
+                roadmapElement.innerHTML = `
+                    <h3>Your Learning Path</h3>
+                    <p>Here's the recommended order to learn missing skills:</p>
+                    <div class="roadmap">
+                        ${missingSkills.map((skill, index) => `
+                            <div class="roadmap-step">
+                                <div class="step-number">${index + 1}</div>
+                                <div class="step-content">
+                                    <h4>Learn ${skill}</h4>
+                                    <p>${learningOutcomes[skill] || 'Focus on understanding the fundamentals and practical applications'}</p>
+                                    <div class="progress-tracker">
+                                        <input type="checkbox" id="progress-${skill.toLowerCase()}" class="progress-checkbox" data-skill="${skill}" ${userProgress[skill] ? 'checked' : ''}>
+                                        <label for="progress-${skill.toLowerCase()}">Mark as completed</label>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                // Add event listeners to progress checkboxes
+                document.querySelectorAll('.progress-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        const skill = this.dataset.skill;
+                        userProgress[skill] = this.checked;
+                        
+                        // Save to localStorage
+                        localStorage.setItem('skillProgress', JSON.stringify(userProgress));
+                        
+                        updateNextSteps();
+                    });
+                });
+            }
+            
+            function displayVisualRoadmap(missingSkills) {
+                const visualRoadmapContainer = document.getElementById('visual-roadmap-container');
+                const visualRoadmap = document.getElementById('visual-roadmap');
+                
+                if (missingSkills.length === 0) {
+                    visualRoadmapContainer.style.display = 'none';
+                    return;
+                }
+                
+                visualRoadmapContainer.style.display = 'block';
+                
+                // Group skills into stages
+                const stages = [
+                    { title: "Foundation", skills: missingSkills.slice(0, 2) },
+                    { title: "Intermediate", skills: missingSkills.slice(2, 4) },
+                    { title: "Advanced", skills: missingSkills.slice(4) }
+                ];
+                
+                visualRoadmap.innerHTML = stages.map(stage => `
+                    <div class="roadmap-stage">
+                        <h4>${stage.title} Stage</h4>
+                        ${stage.skills.map(skill => `
+                            <div class="roadmap-skill">
+                                <span>${skill}</span>
+                                ${userProgress[skill] ? '<span class="completion-badge">Completed</span>' : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `).join('');
+            }
+            
+            function displayResources(missingSkills) {
+                const resourcesElement = document.getElementById('resources');
+                
+                if (missingSkills.length === 0) {
+                    resourcesElement.innerHTML = `<p>No additional resources needed. You're all set!</p>`;
+                    return;
+                }
+                
+                let resourcesHTML = '<h3>Recommended Learning Materials</h3>';
+                resourcesHTML += '<div class="resource-grid">';
+                
+                missingSkills.forEach(skill => {
+                    if (learningResources[skill]) {
+                        resourcesHTML += `
+                            <div class="resource-card">
+                                <div class="resource-card-header">
+                                    <h3>${skill}</h3>
+                                </div>
+                                <div class="resource-card-body">
+                                    ${learningResources[skill].map(resource => `
+                                        <a href="${resource.link}" target="_blank" class="resource-link" data-type="${resource.type}">
+                                            <i class="fab fa-${resource.type === 'youtube' ? 'youtube' : 
+                                                resource.type === 'article' ? 'chrome' : 
+                                                resource.type === 'documentation' ? 'file-alt' :
+                                                resource.type === 'course' ? 'graduation-cap' :
+                                                'book'}"></i>
+                                            <div>
+                                                <strong>${resource.name}</strong>
+                                                <div>${resource.type} ${resource.priority === 'high' ? '<span class="priority-badge">Highly Recommended</span>' : ''}</div>
+                                            </div>
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                resourcesHTML += '</div>';
+                resourcesElement.innerHTML = resourcesHTML;
+            }
+            
+            function displayRecommendations(skills) {
+                const recommendationContent = document.getElementById('recommendation-content');
+                
+                let recommendationsHTML = '<p>Based on your query, we recommend focusing on these skills:</p>';
+                recommendationsHTML += '<div class="resource-grid">';
+                
+                skills.forEach(skill => {
+                    if (learningResources[skill]) {
+                        recommendationsHTML += `
+                            <div class="resource-card">
+                                <div class="resource-card-header">
+                                    <h3>${skill}</h3>
+                                </div>
+                                <div class="resource-card-body">
+                                    ${learningResources[skill].slice(0, 2).map(resource => `
+                                        <a href="${resource.link}" target="_blank" class="resource-link" data-type="${resource.type}">
+                                            <i class="fab fa-${resource.type === 'youtube' ? 'youtube' : 
+                                                resource.type === 'article' ? 'chrome' : 
+                                                resource.type === 'documentation' ? 'file-alt' :
+                                                resource.type === 'course' ? 'graduation-cap' :
+                                                'book'}"></i>
+                                            <div>
+                                                <strong>${resource.name}</strong>
+                                                <div>${resource.type}</div>
+                                            </div>
+                                        </a>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                recommendationsHTML += '</div>';
+                recommendationContent.innerHTML = recommendationsHTML;
+            }
+            
+            function filterResources(type) {
+                const resourceLinks = document.querySelectorAll('.resource-link');
+                
+                resourceLinks.forEach(link => {
+                    if (type === 'all' || link.dataset.type === type) {
+                        link.style.display = 'flex';
+                    } else {
+                        link.style.display = 'none';
+                    }
+                });
+            }
+            
+            function updateNextSteps() {
+                const nextStepsText = document.getElementById('next-steps-text');
+                const completedSkills = Object.keys(userProgress).filter(skill => userProgress[skill]);
+                
+                if (completedSkills.length === 0) {
+                    nextStepsText.textContent = "Start with the first skill in your roadmap to begin your learning journey!";
+                } else if (completedSkills.length < 3) {
+                    nextStepsText.textContent = "Great start! Continue with the next skills in your roadmap to build momentum.";
+                } else {
+                    nextStepsText.textContent = "You're making excellent progress! Consider working on projects to apply what you've learned.";
+                }
+                
+                // Refresh visual roadmap to show completion status
+                const missingSkills = Object.keys(learningResources);
+                displayVisualRoadmap(missingSkills);
+            }
+        });
+    </script>
+</body>
+</html>
